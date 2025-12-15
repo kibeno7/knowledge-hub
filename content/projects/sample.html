@@ -1,17 +1,476 @@
 ---
-title: "Authentication and Authorization in JavaScript"
-date: "2025-04-15"
-description: "A deep dive into the core concepts of authentication and authorization, with hands-on examples."
-tags: ["JavaScript", "Authentication", "Authorization", "Security"]
-slug: "sample"
+title: "Crosschain Attack Detection using GAN"
+date: "2025-10-15"
+description: "A novel deep learning approach for detecting bridge attacks in cross-chain blockchain transactions using Conditional Generative Adversarial Networks (cGAN) with anomaly-based detection."
+tags: ["Deep Learning", "Cross Chain", "Blockchain", "GAN", "Machine Learning"]
+slug: "crosschain-attack-detection-using-gan"
 ---
 
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
-  </head>
-  <body></body>
-</html>
+<div class="flex flex-wrap gap-2 mb-8 not-prose">
+  <img
+    src="https://img.shields.io/badge/License-MIT-blue"
+    alt="License: MIT"
+    class="h-6 w-auto rounded-md shadow-sm"
+  />
+  <img
+    src="https://img.shields.io/badge/Pytorch-Production-orange"
+    alt="PyTorch"
+    class="h-6 w-auto rounded-md shadow-sm"
+  />
+</div>
+
+<p class="lead text-xl text-muted-foreground">
+  A novel deep learning approach for detecting bridge attacks in cross-chain
+  blockchain transactions using Conditional Generative Adversarial Networks
+  (cGAN) with anomaly-based detection.
+</p>
+
+<hr class="my-8 border-border/40" />
+
+<h2 id="overview">Overview</h2>
+<p>
+  CCAD-GAN is a deep learning-based anomaly detection system designed to
+  identify malicious transactions in cross-chain blockchain bridges. The system
+  leverages a two-stage GAN training approach to learn normal transaction
+  patterns and detect attacks through reconstruction error analysis.
+</p>
+
+<h3>Key Features</h3>
+<ul class="list-disc pl-6 space-y-2">
+  <li>
+    <strong>93.2% Detection Accuracy</strong> on cross-chain bridge attacks
+  </li>
+  <li>Two-Stage Training: Pretraining (Autoencoder) + GAN Training</li>
+  <li>Real-time Detection with low latency (&lt;50ms per transaction)</li>
+  <li>4×4 Grid Matrix Encoding for transaction representation</li>
+  <li>Anomaly-based Detection using reconstruction error thresholding</li>
+  <li>Production-Ready deployment architecture</li>
+</ul>
+
+<h3>Supported Attack Types</h3>
+<ul class="list-none space-y-2 pl-0">
+  <li class="flex items-center gap-2">
+    <span class="text-red-500">🔴</span> <strong>Replay Attacks</strong> -
+    Transaction replay detection
+  </li>
+  <li class="flex items-center gap-2">
+    <span class="text-red-500">🔴</span> <strong>Double-Spend Attacks</strong> -
+    Duplicate spending identification
+  </li>
+  <li class="flex items-center gap-2">
+    <span class="text-red-500">🔴</span> <strong>Signature Forgery</strong> -
+    Invalid signature detection
+  </li>
+  <li class="flex items-center gap-2">
+    <span class="text-red-500">🔴</span> <strong>Manipulation Attacks</strong> -
+    Transaction data tampering
+  </li>
+</ul>
+
+<hr class="my-8 border-border/40" />
+
+<h2 id="system-architecture">System Architecture</h2>
+<figure>
+  <img
+    src="assets/crosschain_gan/Diagrams/System_Architecture.png"
+    alt="System Architecture"
+    class="w-full max-w-md rounded-xl border border-border/50 shadow-lg mx-auto"
+  />
+  <figcaption class="text-center text-sm text-muted-foreground mt-2">
+    Figure 1: High-level System Architecture
+  </figcaption>
+</figure>
+
+<ol class="list-decimal pl-6 space-y-2 mt-6">
+  <li>
+    <strong>Data Collection Layer</strong> - Monitors Ethereum, BSC, Polygon,
+    and bridge APIs
+  </li>
+  <li>
+    <strong>Preprocessing Module</strong> - Converts transactions to 4×4 grid
+    matrices (128×128 pixels)
+  </li>
+  <li>
+    <strong>CCAD-GAN Model</strong> - Encoder-Generator-Discriminator
+    architecture
+  </li>
+  <li>
+    <strong>Detection Engine</strong> - Calculates reconstruction errors and
+    classifies transactions
+  </li>
+  <li>
+    <strong>Alert System</strong> - Triggers security alerts for detected
+    attacks
+  </li>
+</ol>
+
+<hr class="my-8 border-border/40" />
+
+<h2 id="dataset-structure">Dataset Structure</h2>
+<p>
+  Each cross-chain transaction is represented as a
+  <strong>4×4 grid (16 features)</strong>.
+</p>
+
+<figure>
+  <img
+    src="assets/crosschain_gan/Results/ccad_dataset_4x4_structure.png"
+    alt="Dataset Structure"
+    class="w-full max-w-md rounded-xl border border-border/50 shadow-lg mx-auto"
+  />
+</figure>
+
+<h3>Feature Grid</h3>
+<div class="overflow-x-auto rounded-lg border border-border">
+  <table class="w-full text-sm">
+    <thead class="bg-secondary/40">
+      <tr>
+        <th class="border-b p-3 text-left font-medium">Grid Position</th>
+        <th class="border-b p-3 text-left font-medium">Feature</th>
+        <th class="border-b p-3 text-left font-medium">Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="border-b border-border/40 p-3 font-mono text-xs">(0,0)</td>
+        <td class="border-b border-border/40 p-3">Tx Hash</td>
+        <td class="border-b border-border/40 p-3">Transaction identifier</td>
+      </tr>
+      <tr>
+        <td class="border-b border-border/40 p-3 font-mono text-xs">(0,1)</td>
+        <td class="border-b border-border/40 p-3">Source Chain</td>
+        <td class="border-b border-border/40 p-3">
+          Origin blockchain (Ethereum, BSC, etc.)
+        </td>
+      </tr>
+      <tr>
+        <td class="border-b border-border/40 p-3 font-mono text-xs">(0,2)</td>
+        <td class="border-b border-border/40 p-3">Fees</td>
+        <td class="border-b border-border/40 p-3">Transaction gas fees</td>
+      </tr>
+      <tr>
+        <td class="border-b border-border/40 p-3 font-mono text-xs">(0,3)</td>
+        <td class="border-b border-border/40 p-3">Gas</td>
+        <td class="border-b border-border/40 p-3">Gas limit</td>
+      </tr>
+      <tr>
+        <td class="border-b border-border/40 p-3 font-mono text-xs">(1,0)</td>
+        <td class="border-b border-border/40 p-3">Dest Chain</td>
+        <td class="border-b border-border/40 p-3">Destination blockchain</td>
+      </tr>
+      <tr>
+        <td class="border-b border-border/40 p-3 font-mono text-xs">(1,1)</td>
+        <td class="border-b border-border/40 p-3">Bridge Type</td>
+        <td class="border-b border-border/40 p-3">
+          Cross-chain bridge protocol
+        </td>
+      </tr>
+      <tr>
+        <td class="border-b border-border/40 p-3 font-mono text-xs">(1,2)</td>
+        <td class="border-b border-border/40 p-3">Amount</td>
+        <td class="border-b border-border/40 p-3">Transfer amount</td>
+      </tr>
+      <tr>
+        <td class="border-b border-border/40 p-3 font-mono text-xs">(1,3)</td>
+        <td class="border-b border-border/40 p-3">Lock Time</td>
+        <td class="border-b border-border/40 p-3">Time-lock duration</td>
+      </tr>
+      <tr>
+        <td class="border-b border-border/40 p-3 font-mono text-xs">(2,0)</td>
+        <td class="border-b border-border/40 p-3">Addr From</td>
+        <td class="border-b border-border/40 p-3">Sender address</td>
+      </tr>
+      <tr>
+        <td class="border-b border-border/40 p-3 font-mono text-xs">(2,1)</td>
+        <td class="border-b border-border/40 p-3">Addr To</td>
+        <td class="border-b border-border/40 p-3">Receiver address</td>
+      </tr>
+      <tr>
+        <td class="border-b border-border/40 p-3 font-mono text-xs">(2,2)</td>
+        <td class="border-b border-border/40 p-3">Nonce</td>
+        <td class="border-b border-border/40 p-3">Transaction nonce</td>
+      </tr>
+      <tr>
+        <td class="border-b border-border/40 p-3 font-mono text-xs">(2,3)</td>
+        <td class="border-b border-border/40 p-3">Chain ID</td>
+        <td class="border-b border-border/40 p-3">Blockchain chain ID</td>
+      </tr>
+      <tr>
+        <td class="border-b border-border/40 p-3 font-mono text-xs">(3,0)</td>
+        <td class="border-b border-border/40 p-3">Merkle Root</td>
+        <td class="border-b border-border/40 p-3">Merkle tree root hash</td>
+      </tr>
+      <tr>
+        <td class="border-b border-border/40 p-3 font-mono text-xs">(3,1)</td>
+        <td class="border-b border-border/40 p-3">Proof Data</td>
+        <td class="border-b border-border/40 p-3">Cross-chain proof</td>
+      </tr>
+      <tr>
+        <td class="border-b border-border/40 p-3 font-mono text-xs">(3,2)</td>
+        <td class="border-b border-border/40 p-3">Valid Sig</td>
+        <td class="border-b border-border/40 p-3">Signature validity</td>
+      </tr>
+      <tr>
+        <td class="border-b border-border/40 p-3 font-mono text-xs">(3,3)</td>
+        <td class="border-b border-border/40 p-3">Hash</td>
+        <td class="border-b border-border/40 p-3">Block hash</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<h3>Matrix Generation</h3>
+<p>
+  Each 4×4 raw feature matrix is expanded into a 128×128 grayscale image. Values
+  are normalized into the range [0, 1] using:
+</p>
+<blockquote>
+  M<sub>ij</sub> = ( f<sub>ij</sub> − min(f) ) / ( max(f) − min(f) )
+</blockquote>
+
+<h3>Dataset Statistics</h3>
+<ul class="list-disc pl-6 space-y-2">
+  <li><strong>Valid Transactions:</strong> 2,000 samples</li>
+  <li>
+    <strong>Attack Transactions:</strong> 400 samples (4 attack types × 100
+    each)
+  </li>
+  <li><strong>Training/Test Split:</strong> 80% training, 20% testing</li>
+  <li>
+    <strong>Image Dimensions:</strong> <code>128 × 128 × 1</code> (grayscale)
+  </li>
+</ul>
+
+<hr class="my-8 border-border/40" />
+
+<h2 id="model-architecture">Model Architecture</h2>
+<figure>
+  <img
+    src="assets/crosschain_gan/Diagrams/Flowchart2.jpeg"
+    alt="Flowchart Diagram"
+    class="w-full rounded-xl border border-border/50 shadow-lg"
+  />
+</figure>
+<p class="mt-4">
+  The CCAD-GAN consists of three interconnected neural networks trained in two
+  stages.
+</p>
+
+<h3>1. Encoder</h3>
+<img
+  src="assets/crosschain_gan/Diagrams/encoder.png"
+  alt="Encoder Diagram"
+  class="w-full rounded-xl my-4"
+/>
+<p>
+  The <strong>Encoder</strong> compresses the <code>128×128</code> input
+  transaction matrix into a <strong>256-dimensional latent vector</strong>.
+</p>
+
+<div class="overflow-x-auto rounded-lg border border-border my-6">
+  <table class="w-full text-sm">
+    <thead class="bg-secondary/40">
+      <tr>
+        <th class="border-b p-3 text-left">Layer</th>
+        <th class="border-b p-3 text-left">Input Size</th>
+        <th class="border-b p-3 text-left">Output Size</th>
+        <th class="border-b p-3 text-left">Parameters</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="p-3 border-b border-border/40">Conv1</td>
+        <td class="p-3 border-b border-border/40">128×128×1</td>
+        <td class="p-3 border-b border-border/40">64×64×64</td>
+        <td class="p-3 border-b border-border/40">
+          kernel=4×4, stride=2, LeakyReLU(0.2)
+        </td>
+      </tr>
+      <tr>
+        <td class="p-3 border-b border-border/40">Conv2</td>
+        <td class="p-3 border-b border-border/40">64×64×64</td>
+        <td class="p-3 border-b border-border/40">32×32×128</td>
+        <td class="p-3 border-b border-border/40">
+          kernel=4×4, stride=2, LeakyReLU(0.2)
+        </td>
+      </tr>
+      <tr>
+        <td class="p-3 border-b border-border/40">Conv3</td>
+        <td class="p-3 border-b border-border/40">32×32×128</td>
+        <td class="p-3 border-b border-border/40">16×16×256</td>
+        <td class="p-3 border-b border-border/40">
+          kernel=4×4, stride=2, LeakyReLU(0.2)
+        </td>
+      </tr>
+      <tr>
+        <td class="p-3 border-b border-border/40">FC</td>
+        <td class="p-3 border-b border-border/40">32,768</td>
+        <td class="p-3 border-b border-border/40">256</td>
+        <td class="p-3 border-b border-border/40">Tanh activation</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<p><strong>Total Parameters:</strong> ~5.2M</p>
+
+<h3>2. Generator</h3>
+<img
+  src="assets/crosschain_gan/Diagrams/generator.png"
+  alt="Generator Diagram"
+  class="w-full rounded-xl my-4"
+/>
+<p>
+  The <strong>Generator</strong> reconstructs the original
+  <code>128×128</code> transaction matrix from the 256-dimensional latent
+  vector.
+</p>
+
+<h3>3. Discriminator</h3>
+<img
+  src="assets/crosschain_gan/Diagrams/discriminator.png"
+  alt="Discriminator Diagram"
+  class="w-full rounded-xl my-4"
+/>
+<p>
+  The <strong>Discriminator</strong> classifies transactions as
+  <strong>real</strong> or <strong>fake (reconstructed)</strong>.
+</p>
+
+<hr class="my-8 border-border/40" />
+
+<h2 id="algorithm">Algorithm & Methodology</h2>
+
+<h3>Two-Stage Training Approach</h3>
+
+<h4>Stage 1: Encoder Pretraining</h4>
+<p>Objective: Learn to reconstruct valid transactions.</p>
+
+<pre><code class="language-bash"># ALGORITHM
+1. Initialize Encoder E and Generator G  
+2. FOR epoch = 1 to 15:  
+     FOR each batch of valid transactions x:  
+         z = E(x)  
+         x_reconstructed = G(z)  
+         loss = MSE(x, x_reconstructed)  
+         Update E and G using Adam optimizer  
+     IF loss < 0.005 -> BREAK  
+3. Save pretrained weights
+
+# Hyperparameters
+- Batch size: 16  
+- Learning rate: 0.0002  
+- Optimizer: Adam (β₁ = 0.5, β₂ = 0.999)  
+- Epochs: 15
+</code></pre>
+
+<h4>Stage 2: GAN Training</h4>
+<p>Objective: Improve reconstruction quality and add adversarial learning.</p>
+
+<pre><code class="language-bash"># ALGORITHM
+1. Load pretrained E and G  
+2. Initialize Discriminator D  
+3. FOR epoch = 1 to 20:  
+     • Train Discriminator:  
+         z = E(x)  
+         x_fake = G(z)  
+         loss_D = BCE(D(x), 1) + BCE(D(x_fake), 0)  
+         Update D  
+     • Train Generator:  
+         z = E(x)  
+         x_fake = G(z)  
+         loss_G = 10 · MSE(x, x_fake) + BCE(D(x_fake), 1)  
+         Update E and G  
+     IF D_loss ∈ [0.3, 0.7] for 3 consecutive epochs -> BREAK  
+</code></pre>
+
+<hr class="my-8 border-border/40" />
+
+<h2 id="results">Results & Performance</h2>
+
+<h3>Training Progress</h3>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6 my-6">
+  <figure>
+    <img
+      src="assets/crosschain_gan/Results/ccad_pretraining_losses.png"
+      alt="Pretraining Loss"
+      class="rounded-xl border border-border/50"
+    />
+    <figcaption class="text-center text-xs mt-2 text-muted-foreground">
+      Pretraining Loss
+    </figcaption>
+  </figure>
+  <figure>
+    <img
+      src="assets/crosschain_gan/Results/ccad_gan_training_losses.png"
+      alt="GAN Training Loss"
+      class="rounded-xl border border-border/50"
+    />
+    <figcaption class="text-center text-xs mt-2 text-muted-foreground">
+      GAN Training Loss
+    </figcaption>
+  </figure>
+</div>
+
+<h3>Detection Performance</h3>
+<figure class="my-6">
+  <img
+    src="assets/crosschain_gan/Results/ccad_detection_performance.png"
+    alt="Detection Performance Matrix"
+    class="rounded-xl border border-border/50 w-full max-w-lg mx-auto"
+  />
+</figure>
+
+<ul class="list-disc pl-6 space-y-2">
+  <li>✅ <strong>Accuracy:</strong> 93.2%</li>
+  <li>✅ <strong>Precision:</strong> 99.1%</li>
+  <li>✅ <strong>Recall:</strong> 87.2%</li>
+  <li>✅ <strong>F1-Score:</strong> 92.8%</li>
+  <li>✅ <strong>AUC-ROC:</strong> 0.929</li>
+</ul>
+
+<hr class="my-8 border-border/40" />
+
+<h2 id="structure">Project Structure</h2>
+<pre><code class="language-plaintext">ccad-gan/
+├── data/
+│   ├── valid_transactions/          # Valid transaction matrices
+│   └── attack_transactions/         # Attack transaction matrices
+├── models/
+│   ├── ccad_gan_final.pth           # Trained model weights
+│   └── ccad_pretrained_autoencoder.pth
+├── Diagrams/
+│   ├── Flowchart.jpeg
+│   ├── System_Architecture.png
+│   └── ...
+├── Results/
+│   ├── ccad_gan_training_losses.png
+│   └── ...
+├── CCAD_GAN.ipynb                  # Training notebook
+├── ccad_gan.py
+├── README.md
+└── LICENSE
+</code></pre>
+
+<hr class="my-8 border-border/40" />
+
+<h2 id="future">Future Work</h2>
+<ul class="list-disc pl-6 space-y-2">
+  <li>Multi-chain support (Solana, Avalanche, Arbitrum)</li>
+  <li>Real-time streaming detection</li>
+  <li>Explainable AI for attack attribution</li>
+  <li>Integration with blockchain monitoring platforms</li>
+  <li>Zero-knowledge proof validation</li>
+  <li>Federated learning for privacy-preserving training</li>
+</ul>
+
+<div class="mt-12 flex justify-center">
+  <p class="text-sm text-muted-foreground flex items-center gap-2">
+    <span>⭐ Star this project on</span>
+    <a
+      href="https://github.com/kibeno7/Cross-Chain-Attack-Detection-GAN"
+      class="font-medium text-brand hover:underline"
+      >GitHub</a
+    >
+  </p>
+</div>
